@@ -3,13 +3,13 @@ package ify.com.hotelsapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.content.Intent;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button Hotels;
+   private Button Hotels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-       Hotels = (Button)(findViewById(R.id.Hotels));
+       Hotels  = findViewById(R.id.Hotels);
     }
-
-
 
 
     }
