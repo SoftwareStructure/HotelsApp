@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/Hotels"
+        android:layouy_onclick="onClick"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="70dp"
