@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             // Sign up success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail: success");
                             Toast.makeText(RegisterActivity.this, "Account created successfully.",Toast.LENGTH_LONG).show();
-
+                            sendUserToLoginActivity();
 
                            // sendUserToLoginActivity();
                         } else {
