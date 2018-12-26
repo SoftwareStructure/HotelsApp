@@ -21,17 +21,17 @@ public class AddVacation extends AppCompatActivity  {
     EditText Price;
     EditText HotelName;
     EditText LocalOrAbroad;
-    DatabaseReference VacationDB;
-    DatabaseReference UserDB;
 
+    DatabaseReference VacationDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vacation);
         init();
-        onCLick();
+        add.setOnClickListener(onClick1);
     }
+
     private void init() {
         this.add= findViewById(R.id.Add);
         this.country=findViewById(R.id.country);
@@ -40,55 +40,38 @@ public class AddVacation extends AppCompatActivity  {
         this.HotelName=findViewById(R.id.Hotel);
         this.Price=findViewById(R.id.Price);
         this.LocalOrAbroad=findViewById(R.id.LocalAbroad);
-        VacationDB=FirebaseDatabase.getInstance().getReference("Vacation");
-        UserDB=FirebaseDatabase.getInstance().getReference("UsersId");
+        VacationDB=FirebaseDatabase.getInstance().getReference("Vacations");
+
     }
-    private void onCLick() {
 
-        this.add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-        if(
-                validfield(country)&&
-                validfield(checkIn)&&
-                validfield(checkOut)&&
-                validfield(Price)&&
-                validfield(LocalOrAbroad)&&
-                validfield(HotelName)) {
-                Toast.makeText(AddVacation.this,"Vacation added", Toast.LENGTH_LONG).show();
-                String id1 =VacationDB.push().getKey();
-                String id2 =UserDB.push().getKey();
-                Vacation vac=new Vacation("Israel",12-02-13,22-03-12,"KingDavid",2220,0);
-                VacationDB.child(id1).setValue(vac);
+    View.OnClickListener onClick1=(v)->{
+/*
+        if(validField(country)&&validField(checkIn)&&validField(checkOut)&&validField(Price)&&validField(LocalOrAbroad)&&validField(HotelName)) {
+
+            Vacation v1=new Vacation(country.getText().toString(),checkIn.getText().toString(), checkOut.getText().toString(), HotelName.getText().toString(),
+            Integer.parseInt(Price.getText().toString()),Integer.parseInt(LocalOrAbroad.getText().toString()));
+
+            String id1 =VacationDB.push().getKey();
+
+            VacationDB.child(id1).setValue(v1);
 
 
 
+            Toast.makeText(AddVacation.this,"Vacation added successfully", Toast.LENGTH_LONG).show();
         }
-        else return;
+        else  return;
+*/
 
+    };
 
+    private boolean validField(EditText text){
 
-
-
-
-
-
-            }
-        });
-    }
-    private boolean validfield(EditText a){
-        if(TextUtils.isEmpty(a.getText().toString())){
-            a.setError("Enter please");
-            Toast.makeText(AddVacation.this,"erorrrrrrrrrrrrrrr", Toast.LENGTH_LONG).show();
+        if(TextUtils.isEmpty(text.getText().toString())){
+            text.setError("Enter please");
+            Toast.makeText(AddVacation.this,"Missing field", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
 
-
-
-
-
-
-
-}
+    }
