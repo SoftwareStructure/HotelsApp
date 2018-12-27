@@ -19,14 +19,12 @@ public class UserDataHolder {
         return currentUser;
     }
 
-    public void setCurrentUser(String id, List<Vacation> list) {
+    public void setCurrentUser(String id){
         this.currentUser.setId(id);
-        this.currentUser.setVacationsList(list);
     }
 
     public static UserDataHolder getDataHolder() {
         return dataHolder;
     }
-
 
 }

@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import dataHolder.UserDataHolder;
 
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+    private DatabaseReference users;
 
 
     @Override
@@ -37,10 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         InitializeFields();
-
-
         }
 
 
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userPassword=(EditText)findViewById(R.id.login_password);
         forgetPasswrdLink=(TextView)findViewById(R.id.forget_password_link);
         mAuth=FirebaseAuth.getInstance();
-
+        users=FirebaseDatabase.getInstance().getReference("users");
 
 
         findViewById(R.id.need_new_account_link).setOnClickListener(this);
@@ -103,8 +103,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-
-                           // sendToManagersActivity();
+                            sendToManagersActivity();
+                            writeToUserDatabase(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -121,6 +121,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
        
     }
 
+    private void writeToUserDatabase(FirebaseUser user) {
+
+
+    }
+
+
     private void sendToManagersActivity() {
 
         Intent managerIntent=new Intent(LoginActivity.this,Managers.class);
@@ -130,10 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUI(FirebaseUser user) {
 
-        UserDataHolder.getDataHolder().setCurrentUser(user.getUid(),null);
-
-
-
+        UserDataHolder.getDataHolder().setCurrentUser(user.getUid());
     }
 
     private void signOut() {
@@ -177,10 +180,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      else if(id==R.id.login_button)
          sendUserToSignIn(userEmail.getText().toString(),userPassword.getText().toString());
 
-
        }
-
-
 
 }
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class User {
 
-    String id;
+    private String id;
 
     List<Vacation> vacationsList;
 
