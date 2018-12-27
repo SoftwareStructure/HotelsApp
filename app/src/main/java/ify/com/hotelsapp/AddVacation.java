@@ -22,7 +22,7 @@ public class AddVacation extends AppCompatActivity  {
     EditText HotelName;
     EditText LocalOrAbroad;
 
-    DatabaseReference VacationDB;
+    DatabaseReference vacationDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,27 +40,28 @@ public class AddVacation extends AppCompatActivity  {
         this.HotelName=findViewById(R.id.Hotel);
         this.Price=findViewById(R.id.Price);
         this.LocalOrAbroad=findViewById(R.id.LocalAbroad);
-        VacationDB=FirebaseDatabase.getInstance().getReference("Vacations");
+        vacationDB=FirebaseDatabase.getInstance().getReference("Vacations");
 
     }
 
     View.OnClickListener onClick1=(v)->{
-/*
+
         if(validField(country)&&validField(checkIn)&&validField(checkOut)&&validField(Price)&&validField(LocalOrAbroad)&&validField(HotelName)) {
 
             Vacation v1=new Vacation(country.getText().toString(),checkIn.getText().toString(), checkOut.getText().toString(), HotelName.getText().toString(),
             Integer.parseInt(Price.getText().toString()),Integer.parseInt(LocalOrAbroad.getText().toString()));
 
-            String id1 =VacationDB.push().getKey();
-
-            VacationDB.child(id1).setValue(v1);
-
-
 
             Toast.makeText(AddVacation.this,"Vacation added successfully", Toast.LENGTH_LONG).show();
+
+            vacationDB.push().
+
+
+
+
         }
         else  return;
-*/
+
 
     };
 

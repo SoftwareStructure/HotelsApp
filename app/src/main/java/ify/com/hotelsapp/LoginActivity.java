@@ -18,16 +18,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import dataHolder.UserDataHolder;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener  {
 
-
     private static final String TAG = "EmailPassword";
-    
     private FirebaseUser currentUser;
     private Button loginButton,phoneLoginButton;
     private EditText userEmail,userPassword;
     private TextView needNewAccountLink, forgetPasswrdLink;
+
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
 
     @Override
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userPassword=(EditText)findViewById(R.id.login_password);
         forgetPasswrdLink=(TextView)findViewById(R.id.forget_password_link);
         mAuth=FirebaseAuth.getInstance();
+
 
 
         findViewById(R.id.need_new_account_link).setOnClickListener(this);
@@ -100,7 +103,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            sendToManagersActivity();
+
+                           // sendToManagersActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -124,14 +128,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void updateUI(Object o) {
+    private void updateUI(FirebaseUser user) {
+
+        UserDataHolder.getDataHolder().setCurrentUser(user.getUid(),null);
+
+
+
     }
 
     private void signOut() {
         mAuth.signOut();
         updateUI(null);
-
-
     }
 
     private boolean validateForm() {
