@@ -25,11 +25,11 @@ public class AddVacation extends AppCompatActivity  {
     EditText HotelName;
     EditText LocalOrAbroad;
     DatabaseReference VacationDB;
-    static DatabaseReference UserDB;
+   static DatabaseReference UserDB;
     static  String counter="1";
-    FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+    String emailUser=currentemail.split("@")[0];
+    FirebaseUser use;
 
-    String UserEmail=user.getEmail();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class AddVacation extends AppCompatActivity  {
         setContentView(R.layout.activity_add_vacation);
         init();
         onCLick();
+        use=FirebaseAuth.getInstance().getCurrentUser();
     }
     private void init() {
         this.add= findViewById(R.id.Add);
@@ -48,6 +49,7 @@ public class AddVacation extends AppCompatActivity  {
         this.LocalOrAbroad=findViewById(R.id.LocalAbroad);
         VacationDB=FirebaseDatabase.getInstance().getReference("Vacation");
         UserDB=FirebaseDatabase.getInstance().getReference("UsersId");
+
     }
     private void onCLick() {
 
@@ -62,11 +64,11 @@ public class AddVacation extends AppCompatActivity  {
                 validfield(Price)&&
                 validfield(LocalOrAbroad)&&
                 validfield(HotelName)) {
-                Toast.makeText(AddVacation.this,"Vacation added"+UserEmail, Toast.LENGTH_LONG).show();
+                Toast.makeText(AddVacation.this,"Vacation added", Toast.LENGTH_LONG).show();
                 String id1 =VacationDB.push().getKey();
                 String id2 =UserDB.push().getKey();
                 Vacation vac=new Vacation(country.getText().toString(),checkIn.getText().toString(),checkOut.getText().toString(),HotelName.getText().toString(),Integer.parseInt(Price.getText().toString()),0);
-                UserDB.child(UserEmail).child("vac2").setValue(vac);
+
 
 
 

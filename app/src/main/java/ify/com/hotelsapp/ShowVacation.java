@@ -12,6 +12,4 @@ public class ShowVacation extends AppCompatActivity {
         setContentView(R.layout.activity_show_vacation);
     }
 
-
-
 }

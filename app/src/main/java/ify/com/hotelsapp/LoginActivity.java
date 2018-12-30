@@ -17,28 +17,35 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import static ify.com.hotelsapp.AddVacation.UserDB;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import dataHolder.UserDataHolder;
+
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener  {
 
-
     private static final String TAG = "EmailPassword";
-    
     private FirebaseUser currentUser;
     private Button loginButton,phoneLoginButton;
     private EditText userEmail,userPassword;
     private TextView needNewAccountLink, forgetPasswrdLink;
+
     private FirebaseAuth mAuth;
+
     static String currentemail;
+
+    private FirebaseUser mUser;
+    private DatabaseReference users;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         InitializeFields();
-
-
         }
 
 
@@ -50,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userPassword=(EditText)findViewById(R.id.login_password);
         forgetPasswrdLink=(TextView)findViewById(R.id.forget_password_link);
         mAuth=FirebaseAuth.getInstance();
+        users=FirebaseDatabase.getInstance().getReference("users");
 
 
         findViewById(R.id.need_new_account_link).setOnClickListener(this);
@@ -101,8 +109,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                             sendToManagersActivity();
+
                             currentemail=email;
                             Toast.makeText(LoginActivity.this,"------>"+currentemail, Toast.LENGTH_LONG).show();
+
+
+                            writeToUserDatabase(user);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -120,6 +132,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
        
     }
 
+    private void writeToUserDatabase(FirebaseUser user) {
+
+
+    }
+
+
     private void sendToManagersActivity() {
 
         Intent managerIntent=new Intent(LoginActivity.this,Managers.class);
@@ -127,14 +145,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void updateUI(Object o) {
+    private void updateUI(FirebaseUser user) {
+
+      //  UserDataHolder.getDataHolder().setCurrentUser(user.getUid());
     }
 
     private void signOut() {
         mAuth.signOut();
         updateUI(null);
-
-
     }
 
     private boolean validateForm() {
@@ -173,10 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      else if(id==R.id.login_button)
          sendUserToSignIn(userEmail.getText().toString(),userPassword.getText().toString());
 
-
        }
-
-
 
 }
 

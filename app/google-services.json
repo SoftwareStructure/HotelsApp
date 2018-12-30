@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1059685719133-aotc34b3211penigng4t8ag2b83tfs7p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ify.com.hotelsapp",
+            "certificate_hash": "4074b58f7aa480f61da8bd6069b04874e2615df7"
+          }
+        },
+        {
           "client_id": "1059685719133-pjqhs6dutpmdfa4lfqp1gf28j6lj1rcg.apps.googleusercontent.com",
           "client_type": 3
         }
