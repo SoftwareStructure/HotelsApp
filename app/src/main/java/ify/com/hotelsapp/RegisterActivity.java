@@ -21,6 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static ify.com.hotelsapp.AddVacation.UserDB;
+import static ify.com.hotelsapp.LoginActivity.currentemail;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -73,6 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Log.d(TAG, "createUserWithEmail: success");
                             Toast.makeText(RegisterActivity.this, "Account created successfully.",Toast.LENGTH_LONG).show();
                             sendUserToLoginActivity();
+
 
                            // sendUserToLoginActivity();
                         } else {

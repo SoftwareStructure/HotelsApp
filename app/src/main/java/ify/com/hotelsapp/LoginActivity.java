@@ -17,7 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import static ify.com.hotelsapp.AddVacation.UserDB;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener  {
 
 
@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText userEmail,userPassword;
     private TextView needNewAccountLink, forgetPasswrdLink;
     private FirebaseAuth mAuth;
-
+    static String currentemail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(registerIntent);
     }
 
-    private void sendUserToSignIn(String email,String password) {
+    private void sendUserToSignIn(final String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -101,6 +101,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                             sendToManagersActivity();
+                            currentemail=email;
+                            Toast.makeText(LoginActivity.this,"------>"+currentemail, Toast.LENGTH_LONG).show();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

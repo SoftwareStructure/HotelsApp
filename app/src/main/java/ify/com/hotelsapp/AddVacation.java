@@ -1,7 +1,7 @@
 package ify.com.hotelsapp;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.StaticLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -9,8 +9,11 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import static ify.com.hotelsapp.LoginActivity.currentemail;
 
 public class AddVacation extends AppCompatActivity  {
 
@@ -22,8 +25,11 @@ public class AddVacation extends AppCompatActivity  {
     EditText HotelName;
     EditText LocalOrAbroad;
     DatabaseReference VacationDB;
-    DatabaseReference UserDB;
+    static DatabaseReference UserDB;
+    static  String counter="1";
+    FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
 
+    String UserEmail=user.getEmail();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class AddVacation extends AppCompatActivity  {
 
         this.add.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
         if(
                 validfield(country)&&
@@ -55,11 +62,14 @@ public class AddVacation extends AppCompatActivity  {
                 validfield(Price)&&
                 validfield(LocalOrAbroad)&&
                 validfield(HotelName)) {
-                Toast.makeText(AddVacation.this,"Vacation added", Toast.LENGTH_LONG).show();
+                Toast.makeText(AddVacation.this,"Vacation added"+UserEmail, Toast.LENGTH_LONG).show();
                 String id1 =VacationDB.push().getKey();
                 String id2 =UserDB.push().getKey();
-                Vacation vac=new Vacation("Israel",12-02-13,22-03-12,"KingDavid",2220,0);
-                VacationDB.child(id1).setValue(vac);
+                Vacation vac=new Vacation(country.getText().toString(),checkIn.getText().toString(),checkOut.getText().toString(),HotelName.getText().toString(),Integer.parseInt(Price.getText().toString()),0);
+                UserDB.child(UserEmail).child("vac2").setValue(vac);
+
+
+
 
 
 
