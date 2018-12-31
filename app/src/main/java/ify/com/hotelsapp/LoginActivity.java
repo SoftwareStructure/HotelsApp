@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void sendToManagersActivity() {
 
-        Intent managerIntent=new Intent(LoginActivity.this,Managers.class);
+        Intent managerIntent=new Intent(LoginActivity.this , Managers.class);
         startActivity( managerIntent);
 
     }

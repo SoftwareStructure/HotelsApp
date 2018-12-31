@@ -25,9 +25,59 @@ public class Vacation {
     }
 
 
+    public static int getLOCAL() {
+        return LOCAL;
+    }
 
+    public static int getABROAD() {
+        return ABROAD;
+    }
 
+    public String getCounrty() {
+        return Counrty;
+    }
 
+    public String getCheckIn() {
+        return CheckIn;
+    }
 
+    public String getCheckOut() {
+        return CheckOut;
+    }
 
+    public String getHotelName() {
+        return HotelName;
+    }
+
+    public int getPrice() {
+        return Price;
+    }
+
+    public int getLocal() {
+        return local;
+    }
+
+    public void setCounrty(String counrty) {
+        Counrty = counrty;
+    }
+
+    public void setCheckIn(String checkIn) {
+        CheckIn = checkIn;
+    }
+
+    public void setCheckOut(String checkOut) {
+        CheckOut = checkOut;
+    }
+
+    public void setHotelName(String hotelName) {
+        HotelName = hotelName;
+    }
+
+    public void setPrice(int price) {
+        Price = price;
+    }
+
+    public void setLocal(int local) {
+        this.local = local;
+    }
 }

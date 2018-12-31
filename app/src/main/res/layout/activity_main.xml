@@ -7,7 +7,7 @@
     android:background="@drawable/main"
     tools:context=".MainActivity">
 
-    <ImageView
+    <Button
         android:id="@+id/Customers"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -16,7 +16,7 @@
         android:layout_marginRight="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/customer" />
+        android:background="@drawable/customer"/>
 
     <TextView
         android:id="@+id/H_Entrance"

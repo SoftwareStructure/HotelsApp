@@ -25,7 +25,7 @@ public class AddVacation extends AppCompatActivity  {
     EditText HotelName;
     EditText LocalOrAbroad;
     DatabaseReference VacationDB;
-   static DatabaseReference UserDB;
+    DatabaseReference UserDB;
     static  String counter="1";
     String emailUser=currentemail.split("@")[0];
     FirebaseUser use;
@@ -67,8 +67,9 @@ public class AddVacation extends AppCompatActivity  {
                 Toast.makeText(AddVacation.this,"Vacation added", Toast.LENGTH_LONG).show();
                 String id1 =VacationDB.push().getKey();
                 String id2 =UserDB.push().getKey();
-                Vacation vac=new Vacation(country.getText().toString(),checkIn.getText().toString(),checkOut.getText().toString(),HotelName.getText().toString(),Integer.parseInt(Price.getText().toString()),0);
 
+                Vacation vac=new Vacation(country.getText().toString(),checkIn.getText().toString(),checkOut.getText().toString(),HotelName.getText().toString(),Integer.parseInt(Price.getText().toString()),0);
+                UserDB.child("Guy").child("Fadida").setValue(vac);
 
 
 
