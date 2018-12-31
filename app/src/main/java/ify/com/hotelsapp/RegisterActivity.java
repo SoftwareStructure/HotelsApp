@@ -20,7 +20,8 @@ import com.google.firebase.auth.AuthResult;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import static ify.com.hotelsapp.LoginActivity.currentemail;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView alreadyHaveAccountLink;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
    // private ProgressBar
 
@@ -56,44 +58,62 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.register_button).setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
     }
 
 
-    private void createNewAccount( String email, String password) {
-
-        Log.d(TAG, "createAccount:" + email);
-        if (!validateForm())
+    private void createNewAccount() {
+        Log.d(TAG, "signUp");
+        if (!validateForm()) {
             return;
+        }
 
-       // show
+        //showProgressDialog();
+        String email = userEmail.getText().toString();
+        String password = userPassword.getText().toString();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUser:onComplete:" + task.isSuccessful());
+                      //  hideProgressDialog();
+
                         if (task.isSuccessful()) {
-                            // Sign up success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail: success");
-                            Toast.makeText(RegisterActivity.this, "Account created successfully.",Toast.LENGTH_LONG).show();
-
-                            sendUserToLoginActivity();
-
-
-
-                           // sendUserToLoginActivity();
+                            onAuthSuccess(task.getResult().getUser());
                         } else {
-                            // If sign up fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            String message=task.getException().toString();
-                            Toast.makeText(RegisterActivity.this, "Error: "+message,Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(RegisterActivity.this, "Sign Up Failed",
+                                    Toast.LENGTH_SHORT).show();
                         }
-
-                    //    hideProgressDialog();
                     }
                 });
+    }
 
+    private void onAuthSuccess(FirebaseUser user) {
+
+            String username = usernameFromEmail(user.getEmail());
+
+            // Write new user
+            writeNewUser(user.getUid(), username, user.getEmail());
+
+            // Go to MainActivity
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
+        }
+
+    private String usernameFromEmail(String email) {
+        if (email.contains("@")) {
+            return email.split("@")[0];
+        } else {
+            return email;
+        }
+    }
+
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        mDatabase.child("users").child(userId).setValue(user);
     }
 
 
@@ -137,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             sendUserToLoginActivity();
         else if(id==R.id.register_button) {
 
-            createNewAccount(userEmail.getText().toString(),userPassword.getText().toString());
+            createNewAccount();
         }
 
     }

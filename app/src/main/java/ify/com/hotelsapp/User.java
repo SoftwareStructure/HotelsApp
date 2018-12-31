@@ -6,8 +6,19 @@ import java.util.List;
 public class User {
 
     private String email;
+    private String name;
 
     List<Vacation> vacationsList;
+
+    public User(){};
+
+    public User(String name,String email){
+
+        this.name=name;
+        this.email=email;
+
+
+        }
 
     /*public User(){
        id;
