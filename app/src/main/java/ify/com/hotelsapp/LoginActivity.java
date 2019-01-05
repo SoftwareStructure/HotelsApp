@@ -1,14 +1,15 @@
 package ify.com.hotelsapp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,25 +21,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import dataHolder.UserDataHolder;
+import models.User;
 
+public class LoginActivity extends BaseActivity implements View.OnClickListener  {
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener  {
+    private static final String TAG = "SignIn";
 
-    private static final String TAG = "EmailPassword";
-    private FirebaseUser currentUser;
-    private Button loginButton,phoneLoginButton;
-    private EditText userEmail,userPassword;
-    private TextView needNewAccountLink, forgetPasswrdLink;
+    private Button loginButton;
+    private Button phoneLoginButton;
+
+    private EditText userEmail;
+    private EditText userPassword;
+
+    private TextView needNewAccountLink;
+    private TextView forgetPasswrdLink;
 
     private FirebaseAuth mAuth;
-
-    static String currentemail;
-
-    private FirebaseUser mUser;
-    private DatabaseReference users;
-
-
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +50,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void InitializeFields() {
 
-
         phoneLoginButton=(Button)findViewById(R.id.phone_login_button);
         userEmail=(EditText)findViewById(R.id.login_email);
         userPassword=(EditText)findViewById(R.id.login_password);
         forgetPasswrdLink=(TextView)findViewById(R.id.forget_password_link);
-        mAuth=FirebaseAuth.getInstance();
-        users=FirebaseDatabase.getInstance().getReference("users");
-
 
         findViewById(R.id.need_new_account_link).setOnClickListener(this);
         findViewById(R.id.login_button).setOnClickListener(this);
+
+
+        mAuth=FirebaseAuth.getInstance();
+
     }
 
 
@@ -73,30 +72,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
 
         if(currentUser!=null){
-            sendUserToMainActivity();
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
 
-    private void sendUserToMainActivity() {
-
-        Intent loginIntent=new Intent(LoginActivity.this,MainActivity.class);
-        startActivity(loginIntent);
-    }
-
-    private void sendUserToRegisterActivity() {
-
-        Intent registerIntent=new Intent(LoginActivity.this,RegisterActivity.class);
-        startActivity(registerIntent);
-    }
-
-    private void sendUserToSignIn(final String email, String password) {
-        Log.d(TAG, "signIn:" + email);
+    private void sendUserToSignIn() {
+        Log.d(TAG, "signIn");
         if (!validateForm()) {
             return;
         }
 
-        //showProgressDialog();
+        showProgressDialog();
+
+
+        String email=userEmail.getText().toString();
+        String password=userPassword.getText().toString();
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -104,50 +95,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                            sendToManagersActivity();
 
-                            currentemail=email;
-                            Toast.makeText(LoginActivity.this,"------>"+currentemail, Toast.LENGTH_LONG).show();
+                            updateUI(task.getResult().getUser());
 
-
-                            writeToUserDatabase(user);
+                            startActivity(new Intent(LoginActivity.this,Managers.class));
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+
+                            Toast.makeText(LoginActivity.this, "Authentication failed. Try again",
                                     Toast.LENGTH_LONG).show();
-                            updateUI(null);
+
                         }
 
-                      
-                       // hideProgressDialog();
-                    
+                        hideProgressDialog();
                     }
                 });
        
     }
 
-    private void writeToUserDatabase(FirebaseUser user) {
-
-
-    }
-
-
-    private void sendToManagersActivity() {
-
-        Intent managerIntent=new Intent(LoginActivity.this , Managers.class);
-        startActivity( managerIntent);
-
-    }
 
     private void updateUI(FirebaseUser user) {
 
-      //  UserDataHolder.getDataHolder().setCurrentUser(user.getUid());
+        dataHolder.setUserId(user.getUid());
+        dataHolder.setCurrentUser(new User(user.getDisplayName(),user.getEmail()));
     }
 
     private void signOut() {
@@ -186,12 +161,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int id=v.getId();
 
      if(id==R.id.need_new_account_link)
-         sendUserToRegisterActivity();
+       startActivity(new Intent(this, RegisterActivity.class));
 
      else if(id==R.id.login_button)
-         sendUserToSignIn(userEmail.getText().toString(),userPassword.getText().toString());
+         sendUserToSignIn();
 
        }
-
 }
 

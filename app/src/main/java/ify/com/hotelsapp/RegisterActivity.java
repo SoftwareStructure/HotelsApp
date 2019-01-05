@@ -1,9 +1,7 @@
 package ify.com.hotelsapp;
 
-
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,22 +21,22 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
-import static ify.com.hotelsapp.LoginActivity.currentemail;
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+import models.User;
 
 
-    private static final String TAG = "EmailPassword";
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+
+
+    private static final String TAG = "SignUp";
 
     private Button createAccountButton;
-    private EditText userEmail,userPassword;
+    private EditText userEmail;
+    private EditText userPassword;
     private TextView alreadyHaveAccountLink;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
 
-   // private ProgressBar
-
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.register_button).setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        myRef = FirebaseDatabase.getInstance().getReference("users");
 
     }
 
@@ -69,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        //showProgressDialog();
+        showProgressDialog();
         String email = userEmail.getText().toString();
         String password = userPassword.getText().toString();
 
@@ -78,10 +77,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUser:onComplete:" + task.isSuccessful());
-                      //  hideProgressDialog();
+                        hideProgressDialog();
 
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
+
                         } else {
                             Toast.makeText(RegisterActivity.this, "Sign Up Failed",
                                     Toast.LENGTH_SHORT).show();
@@ -95,11 +95,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String username = usernameFromEmail(user.getEmail());
 
             // Write new user
-            writeNewUser(user.getUid(), username, user.getEmail());
+           writeNewUser(user.getUid(), username, user.getEmail());
 
-            // Go to MainActivity
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-            finish();
+            // Go to Login Activity
+          startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+
+          finish();
         }
 
     private String usernameFromEmail(String email) {
@@ -112,15 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
-
-        mDatabase.child("users").child(userId).setValue(user);
-    }
-
-
-    private void sendUserToLoginActivity() {
-
-        Intent loginIntent=new Intent(RegisterActivity.this,LoginActivity.class);
-        startActivity(loginIntent);
+        myRef.child(userId).setValue(user);
     }
 
     private boolean validateForm() {
@@ -143,10 +136,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else
             userPassword.setError(null);
 
-
         return valid;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -154,11 +145,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         int id=v.getId();
 
         if (id==R.id.already_have_an_account_link)
-            sendUserToLoginActivity();
-        else if(id==R.id.register_button) {
+            startActivity(new Intent(this,LoginActivity.class));
 
+        else if(id==R.id.register_button) {
             createNewAccount();
         }
-
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    >
+    <TextView
+        android:id="@+id/countryXml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_weight="1"></TextView>
+
+    <TextView
+        android:id="@+id/checkInXml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/countryXml"
+        android:textSize="20dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/checkOutXml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkInXml"
+        android:textSize="20dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/priceXml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkOutXml"
+        android:textSize="20dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/hotelNameXml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priceXml"
+        android:textSize="20dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+
+</RelativeLayout>
+

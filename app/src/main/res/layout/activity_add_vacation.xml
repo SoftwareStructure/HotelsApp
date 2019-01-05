@@ -5,6 +5,7 @@
     android:id="@+id/add_vacation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/add"
     tools:context=".AddVacation">
 
     <android.support.constraint.Guideline
@@ -24,7 +25,6 @@
         android:id="@+id/country"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_below="@+id/add_vacation"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="2dp"
         android:layout_marginLeft="2dp"
@@ -126,21 +126,22 @@
         android:textSize="23dp"
     />
 
-    <Button
-        android:id="@+id/Add"
-        android:layout_width="108dp"
-        android:layout_height="67dp"
-        android:layout_below="@+id/LocalAbroad"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tyty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-
-        android:layout_marginBottom="78dp"
-        android:background="@android:color/holo_blue_dark"
-        android:text="Add vacation"
-        android:textColor="@android:color/background_light"
-        android:textSize="15dp"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="449dp" />
+        android:layout_marginStart="160dp"
+        android:layout_marginLeft="172dp"
+        android:layout_marginEnd="184dp"
+        android:layout_marginRight="172dp"
+        android:layout_marginBottom="56dp"
+        android:clickable="true"
+        app:backgroundTint="@android:color/holo_blue_dark"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </RelativeLayout>

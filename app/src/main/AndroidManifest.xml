@@ -27,7 +27,9 @@
         <activity android:name=".Managers" />
         <activity android:name=".ShowVacation" />
         <activity android:name=".AddVacation" />
-        <activity android:name=".Client"></activity>
+        <activity android:name=".Client" />
+        <activity android:name=".ER" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
 
 </manifest>

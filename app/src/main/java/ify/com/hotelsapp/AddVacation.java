@@ -1,107 +1,221 @@
 package ify.com.hotelsapp;
-import android.support.v7.app.AppCompatActivity;
+
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.text.StaticLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import static ify.com.hotelsapp.LoginActivity.currentemail;
+import com.google.firebase.database.ValueEventListener;
 
-public class AddVacation extends AppCompatActivity  {
+import java.util.HashMap;
+import java.util.Map;
 
-    Button add;
+import models.User;
+import models.Vacation;
+
+public class AddVacation extends BaseActivity {
+
+    private static final String TAG = "AddVacation";
+
+    FloatingActionButton add;
+
     EditText country;
     EditText checkIn;
     EditText checkOut;
-    EditText Price;
-    EditText HotelName;
-    EditText LocalOrAbroad;
-    DatabaseReference VacationDB;
-    DatabaseReference UserDB;
-    static  String counter="1";
-    String emailUser=currentemail.split("@")[0];
-    FirebaseUser use;
+    EditText price;
+    EditText hotelName;
+    EditText localOrAbroad;
+
+    FirebaseUser user;
+    DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vacation);
+
         init();
-        onCLick();
-        use=FirebaseAuth.getInstance().getCurrentUser();
     }
+
     private void init() {
-        this.add= findViewById(R.id.Add);
-        this.country=findViewById(R.id.country);
-        this.checkIn=findViewById(R.id.check_in);
-        this.checkOut=findViewById(R.id.check_out);
-        this.HotelName=findViewById(R.id.Hotel);
-        this.Price=findViewById(R.id.Price);
-        this.LocalOrAbroad=findViewById(R.id.LocalAbroad);
-        VacationDB=FirebaseDatabase.getInstance().getReference("Vacation");
-        UserDB=FirebaseDatabase.getInstance().getReference("UsersId");
 
+        add=findViewById(R.id.tyty);
+        add.setOnClickListener(onClick);
+
+        this.country = findViewById(R.id.country);
+        this.checkIn = findViewById(R.id.check_in);
+        this.checkOut = findViewById(R.id.check_out);
+        this.hotelName = findViewById(R.id.Hotel);
+        this.price = findViewById(R.id.Price);
+        this.localOrAbroad = findViewById(R.id.LocalAbroad);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
-    private void onCLick() {
-
-        this.add.setOnClickListener(new View.OnClickListener() {
-            @Override
-
-            public void onClick(View v) {
-        if(
-                validfield(country)&&
-                validfield(checkIn)&&
-                validfield(checkOut)&&
-                validfield(Price)&&
-                validfield(LocalOrAbroad)&&
-                validfield(HotelName)) {
-                Toast.makeText(AddVacation.this,"Vacation added", Toast.LENGTH_LONG).show();
-                String id1 =VacationDB.push().getKey();
-                String id2 =UserDB.push().getKey();
-
-                Vacation vac=new Vacation(country.getText().toString(),checkIn.getText().toString(),checkOut.getText().toString(),HotelName.getText().toString(),Integer.parseInt(Price.getText().toString()),0);
-                UserDB.child("Guy").child("Fadida").setValue(vac);
 
 
+    View.OnClickListener onClick=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
+                Log.d(TAG, "Adding");
 
+                if (!validateForm())
+                    return;
 
-
-        }
-        else return;
-
-
-
-
-
-
-
-
+             addVacation();
             }
-        });
+    };
+
+    private void addVacation() {
+
+      //  Disable button so there are no multi-posts
+        setEditingEnabled(false);
+
+       showProgressDialog();
+
+        // [START single_value_read]
+        final String userId = user.getUid();
+
+        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value
+                        User user = dataSnapshot.getValue(User.class);
+
+                        // [START_EXCLUDE]
+                        if (user == null) {
+                            // User is null, error out
+                            Log.e(TAG, "User " + userId + " is unexpectedly null");
+
+                            Toast.makeText(AddVacation.this,
+                                    "Error: could not fetch user.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Write new post
+                            uploadNewVacation(userId, user.getEmail(),user.getName());
+                        }
+
+                        //Finish this Activity, back to the stream
+                        hideProgressDialog();
+                        setEditingEnabled(true);
+                       finish();
+
+                        // [END_EXCLUDE]
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+                        setEditingEnabled(true);
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END single_value_read]
     }
-    private boolean validfield(EditText a){
-        if(TextUtils.isEmpty(a.getText().toString())){
-            a.setError("Enter please");
-            Toast.makeText(AddVacation.this,"erorrrrrrrrrrrrrrr", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
+
+    private void setEditingEnabled(boolean enabled) {
+
+        country.setEnabled(enabled);
+        checkIn.setEnabled(enabled);
+        checkOut.setEnabled(enabled);
+        price.setEnabled(enabled);
+        localOrAbroad.setEnabled(enabled);
+        hotelName.setEnabled(enabled);
+
+        if (enabled)
+         add.show();
+
+         else add.hide();
     }
 
+    // [START write_fan_out]
+    private void uploadNewVacation(String userId, String username, String email) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = mDatabase.child("posts").push().getKey();
+        Vacation vacation = new Vacation(userId, country.getText().toString(),checkIn.getText().toString(),
+        checkOut.getText().toString(),hotelName.getText().toString(),price.getText().toString(),localOrAbroad.getText().toString());
 
+       // Map<String, Object> vacationValues = vacation.toMap();
 
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/vacations/" + key, vacation);
+        childUpdates.put("/user-vacations/" + userId + "/" + key, vacation);
 
+        mDatabase.updateChildren(childUpdates);
+    }
+    // [END write_fan_out]
 
+    private boolean validateForm() {
 
+        boolean valid = true;
 
+        String country = this.country.getText().toString();
+        if (TextUtils.isEmpty(country)) {
+            this.country.setError("Required.");
+            valid = false;
+
+        } else this.country.setError(null);
+
+        String checkIn = this.checkIn.getText().toString();
+        if (TextUtils.isEmpty(checkIn)) {
+            this.checkIn.setError("Required.");
+            valid = false;
+
+        } else this.checkIn.setError(null);
+
+        String checkOut = this.checkOut.getText().toString();
+        if (TextUtils.isEmpty(checkOut)) {
+            this.checkOut.setError("Required.");
+            valid = false;
+
+        } else this.checkOut.setError(null);
+
+        String price = this.price.getText().toString();
+        if (TextUtils.isEmpty(price)) {
+            this.price.setError("Required.");
+            valid = false;
+
+        } else this.price.setError(null);
+
+        String hotelName = this.hotelName.getText().toString();
+        if (TextUtils.isEmpty(hotelName)) {
+            this.hotelName.setError("Required.");
+            valid = false;
+
+        } else this.hotelName.setError(null);
+
+        String localOrAbroad = this.localOrAbroad.getText().toString();
+        if (TextUtils.isEmpty(localOrAbroad)) {
+            this.localOrAbroad.setError("Required.");
+            valid = false;
+
+        } else this.localOrAbroad.setError(null);
+
+        if(!valid)
+            Toast.makeText(AddVacation.this,"Missing Field", Toast.LENGTH_LONG).show();
+
+        return valid;
+    }
 }
+
+
+
+
+
+
+
