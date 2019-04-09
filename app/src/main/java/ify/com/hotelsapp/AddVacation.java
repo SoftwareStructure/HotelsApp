@@ -1,10 +1,12 @@
 package ify.com.hotelsapp;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,7 +24,7 @@ import java.util.Map;
 import models.User;
 import models.Vacation;
 
-public class AddVacation extends BaseActivity {
+public class AddVacation extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "AddVacation";
 
@@ -35,6 +37,8 @@ public class AddVacation extends BaseActivity {
     EditText hotelName;
     EditText localOrAbroad;
 
+    Button uploadImage;
+
     FirebaseUser user;
     DatabaseReference mDatabase;
 
@@ -46,12 +50,14 @@ public class AddVacation extends BaseActivity {
         setContentView(R.layout.activity_add_vacation);
 
         init();
+
     }
 
     private void init() {
 
         add=findViewById(R.id.tyty);
-        add.setOnClickListener(onClick);
+        add.setOnClickListener(this);
+
 
         this.country = findViewById(R.id.country);
         this.checkIn = findViewById(R.id.check_in);
@@ -60,23 +66,18 @@ public class AddVacation extends BaseActivity {
         this.price = findViewById(R.id.Price);
         this.localOrAbroad = findViewById(R.id.LocalAbroad);
 
+        this.uploadImage=findViewById(R.id.uploadImage);
+        this.uploadImage.setOnClickListener(this);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
 
-    View.OnClickListener onClick=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
 
-                Log.d(TAG, "Adding");
 
-                if (!validateForm())
-                    return;
 
-             addVacation();
-            }
-    };
+
 
     private void addVacation() {
 
@@ -146,11 +147,11 @@ public class AddVacation extends BaseActivity {
     private void uploadNewVacation(String userId, String username, String email) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        String key = mDatabase.child("posts").push().getKey();
+        String key = mDatabase.child("vacations").push().getKey();
         Vacation vacation = new Vacation(userId, country.getText().toString(),checkIn.getText().toString(),
-        checkOut.getText().toString(),hotelName.getText().toString(),price.getText().toString(),localOrAbroad.getText().toString());
+                checkOut.getText().toString(),hotelName.getText().toString(),price.getText().toString(),localOrAbroad.getText().toString());
 
-       // Map<String, Object> vacationValues = vacation.toMap();
+        // Map<String, Object> vacationValues = vacation.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/vacations/" + key, vacation);
@@ -210,6 +211,27 @@ public class AddVacation extends BaseActivity {
             Toast.makeText(AddVacation.this,"Missing Field", Toast.LENGTH_LONG).show();
 
         return valid;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+
+        //Check the view's id and send to correspond activity
+        if (id == uploadImage.getId())
+            startActivity(new Intent(this,UploadImageActivity.class));
+
+        else if (id == add.getId()){
+
+            Log.d(TAG, "Adding");
+
+            if (!validateForm())
+                return;
+
+            addVacation();
+
+    }
     }
 }
 

@@ -31,8 +31,12 @@
           }
         },
         {
-          "client_id": "1059685719133-pjqhs6dutpmdfa4lfqp1gf28j6lj1rcg.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "1059685719133-unq5etbm9qdh1bvac2hrqh7qs9lp4g2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ify.com.hotelsapp",
+            "certificate_hash": "471c703d560cc1041bd0c8ea840d67725265794a"
+          }
         }
       ],
       "api_key": [
@@ -41,20 +45,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "1059685719133-pjqhs6dutpmdfa4lfqp1gf28j6lj1rcg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

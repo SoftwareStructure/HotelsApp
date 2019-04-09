@@ -119,29 +119,43 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
-        android:layout_marginBottom="10dp"
         android:hint="Local or abroad"
         android:inputType="text"
         android:padding="4dp"
-        android:textSize="23dp"
-    />
+        android:textSize="23dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/tyty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/LocalAbroad"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="160dp"
-        android:layout_marginLeft="172dp"
-        android:layout_marginEnd="184dp"
-        android:layout_marginRight="172dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="77dp"
+        android:layout_marginRight="77dp"
+        android:layout_marginBottom="68dp"
         android:clickable="true"
         app:backgroundTint="@android:color/holo_blue_dark"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <Button
+        android:id="@+id/uploadImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LocalAbroad"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="59dp"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginRight="120dp"
+        android:layout_marginBottom="65dp"
+        android:layout_toStartOf="@+id/tyty"
+        android:layout_toLeftOf="@+id/tyty"
+        android:text="Upload" />
 
 </RelativeLayout>
